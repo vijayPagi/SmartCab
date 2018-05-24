@@ -47,8 +47,11 @@ class LearningAgent(Agent):
             self.t += 1
             #self.epsilon = self.epsilon - 0.05
             #self.epsilon = 1.0/(self.t**2)
-            self.epsilon = math.fabs(math.cos(self.alpha*self.t))
+            #self.epsilon = math.cos(self.alpha*self.t)
+            #self.epsilon = math.fabs(math.cos(self.alpha*self.t))
             #self.epsilon = self.epsilon / 120
+            
+            self.epsilon = math.exp(-self.alpha * self.t)
              
         
 
@@ -159,7 +162,7 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning == True:
-            self.Q[state][action] = (1 - self.alpha) * (self.Q[state][action]) + self.alpha * reward
+            self.Q[state][action] = (1 - self.alpha) * (self.Q[state][action]) + (self.alpha * reward)
 
         return
 
@@ -188,7 +191,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment(verbose = False)
+    env = Environment(verbose = True)
     
     ##############
     # Create the driving agent
@@ -218,7 +221,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test = 10,tolerance = 0.002)
+    sim.run(n_test = 100,tolerance = 0.002)
 
 
 if __name__ == '__main__':
