@@ -24,6 +24,7 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
         self.t = 0
+        self.a = 0
 
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
@@ -45,13 +46,14 @@ class LearningAgent(Agent):
             self.alpha = 0
         else:
             self.t += 1
-            #self.epsilon = self.epsilon - 0.05
+            self.a = 2
+            self.epsilon = self.epsilon - 0.005
             #self.epsilon = 1.0/(self.t**2)
-            #self.epsilon = math.cos(self.alpha*self.t)
+            #self.epsilon = math.cos(self.a*self.t)
             #self.epsilon = math.fabs(math.cos(self.alpha*self.t))
             #self.epsilon = self.epsilon / 120
             
-            self.epsilon = math.exp(-self.alpha * self.t)
+            #self.epsilon = math.exp(-self.a * self.t)
              
         
 
@@ -199,7 +201,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent,learning = True,alpha = 0.02, epsilon = 1.0)
+    agent = env.create_agent(LearningAgent,learning = True,alpha = 0.04, epsilon = 1.0)
     
     ##############
     # Follow the driving agent
@@ -221,7 +223,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test = 100,tolerance = 0.002)
+    sim.run(n_test = 40,tolerance = 0.002)
 
 
 if __name__ == '__main__':
