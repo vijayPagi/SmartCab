@@ -2,7 +2,8 @@
 # Reinforcement Learning
 ## Project: Train a Smartcab How to Drive
 
-FInal Result :
+
+Final Result:
 
 
 ### Install
