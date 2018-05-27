@@ -46,14 +46,14 @@ class LearningAgent(Agent):
             self.alpha = 0
         else:
             self.t += 1
-            self.a = 2
-            self.epsilon = self.epsilon - 0.005
+            self.a = -0.01
+            #self.epsilon = self.epsilon - 0.005
             #self.epsilon = 1.0/(self.t**2)
             #self.epsilon = math.cos(self.a*self.t)
             #self.epsilon = math.fabs(math.cos(self.alpha*self.t))
             #self.epsilon = self.epsilon / 120
             
-            #self.epsilon = math.exp(-self.a * self.t)
+            self.epsilon = math.exp(-0.01 * self.t)
              
         
 
@@ -79,7 +79,7 @@ class LearningAgent(Agent):
         # With the hand-engineered features, this learning process gets entirely negated.
         
         # Set 'state' as a tuple of relevant data for the agent        
-        state = waypoint, inputs['light'],inputs['left'],inputs['oncoming']
+        state = (waypoint, inputs['light'],inputs['left'],inputs['oncoming'])
         
 
         return state
@@ -143,13 +143,27 @@ class LearningAgent(Agent):
         elif self.learning:
             if random.random() < self.epsilon:
                 action = random.choice(self.valid_actions)
-        else:
-            hQVal = self.get_maxQ(state)
-            hQVals = []
-            for action in self.Q[state]:
-                if self.Q[state][action] == hQVal:
-                    hQVals.append(action)
-            action = random.choice(hQVals)
+            else:
+                hQVal = self.get_maxQ(state)
+                hQVals = []
+                for action in self.Q[state]:
+                    if self.Q[state][action] == hQVal:
+                        hQVals.append(action)
+                action = random.choice(hQVals)
+        return action
+        #if not self.learning:
+        #    action = random.choice(self.valid_actions)
+        #else:
+        #    maxQ = self.get_maxQ(state)
+        #    if self.epsilon > random.random():
+         #       action = random.choice(self.valid_actions)
+         #   else:
+         #       actions = []
+         #       for act in self.Q[state]:
+         #           if self.Q[state][act] == maxQ:
+         #               actions.append(act)
+         #       action = random.choice(actions)
+
         return action
 
 
@@ -164,7 +178,7 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning == True:
-            self.Q[state][action] = (1 - self.alpha) * (self.Q[state][action]) + (self.alpha * reward)
+            self.Q[state][action] = (1 - self.alpha) * self.Q[state][action] + (self.alpha * reward)
 
         return
 
@@ -201,7 +215,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent,learning = True,alpha = 0.04, epsilon = 1.0)
+    agent = env.create_agent(LearningAgent,learning = True,alpha = 0.5, epsilon = 1.0)
     
     ##############
     # Follow the driving agent
@@ -216,14 +230,14 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env,display= False,update_delay = 0.01,log_metrics = True,optimized = True)
+    sim = Simulator(env,display= True,update_delay = 0.01,log_metrics = True,optimized = True)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test = 40,tolerance = 0.002)
+    sim.run(n_test = 20,tolerance = 0.05)
 
 
 if __name__ == '__main__':
