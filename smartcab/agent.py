@@ -151,20 +151,6 @@ class LearningAgent(Agent):
                         hQVals.append(action)
                 action = random.choice(hQVals)
         return action
-        #if not self.learning:
-        #    action = random.choice(self.valid_actions)
-        #else:
-        #    maxQ = self.get_maxQ(state)
-        #    if self.epsilon > random.random():
-         #       action = random.choice(self.valid_actions)
-         #   else:
-         #       actions = []
-         #       for act in self.Q[state]:
-         #           if self.Q[state][act] == maxQ:
-         #               actions.append(act)
-         #       action = random.choice(actions)
-
-        return action
 
 
     def learn(self, state, action, reward):
@@ -179,7 +165,6 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning == True:
             self.Q[state][action] = (1 - self.alpha) * self.Q[state][action] + (self.alpha * reward)
-
         return
 
 
